@@ -1,123 +1,425 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Feliz Cumpleaños</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom right, #f8e1f4, #fff8e1);
-      color: #5c2a5d;
-      text-align: center;
-      padding: 2rem;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
-    button {
-      padding: 0.75rem 1.5rem;
-      margin: 1rem;
-      border: none;
-      border-radius: 10px;
-      background-color: #d1a3ff;
-      color: white;
-      font-size: 1.1rem;
-      cursor: pointer;
-    }
-    .hidden {
-      display: none;
-    }
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-    }
-    input[type="date"] {
-      padding: 0.5rem;
-      font-size: 1rem;
-      margin-top: 1rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Cumpleaños</title>
+    <style>
+        /* Estilos generales */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            color: #d67ab0;
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+        }
+
+        .message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .invitation p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: 500;
+            min-width: 100px;
+        }
+
+        .yes {
+            background-color: #d67ab0;
+            color: white;
+        }
+
+        .no {
+            background-color: #f0f0f0;
+            color: #555;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .heart {
+            font-size: 3rem;
+            margin-top: 20px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Página de selección de fecha */
+        .date-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .date-btn {
+            padding: 15px;
+            background-color: #f8e1ef;
+            border: 2px solid #d67ab0;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .date-btn:hover, .date-btn.active {
+            background-color: #d67ab0;
+            color: white;
+        }
+
+        .custom-date {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .custom-date label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .custom-date input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        #restaurant-details {
+            margin-top: 30px;
+            text-align: left;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            border-left: 4px solid #d67ab0;
+        }
+
+        #restaurant-details h2 {
+            font-size: 1.3rem;
+            color: #d67ab0;
+            margin-top: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .details {
+            text-align: left;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .details p {
+            margin: 10px 0;
+        }
+
+        /* Transiciones entre páginas */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .card {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .message {
+                font-size: 1rem;
+            }
+        }
+
+        /* Animación de confeti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+            top: 0;
+            animation: confetti 5s ease-in-out infinite;
+            z-index: 1000;
+        }
+
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Feliz cumpleaños 👸</h1>
-    <p>Que este día sea muy especial y se la pase muy bien</p>
-    <button onclick="mostrarInvitacion()">¿Le gustaría celebrar conmigo?</button>
-
-    <div id="invitacion" class="hidden">
-      <p>¿Desea celebrar conmigo?</p>
-      <button onclick="respuesta(true)">Sí</button>
-      <button onclick="respuesta(false)">No</button>
+    <!-- Página principal -->
+    <div id="main-page" class="page active">
+        <div class="container">
+            <div class="card">
+                <h1>Feliz Cumpleaños 👑</h1>
+                <p class="message">Que este día sea muy especial y se la pase muy bien</p>
+                
+                <div class="invitation">
+                    <p>¿Le gustaría celebrar conmigo?</p>
+                    <div class="buttons">
+                        <button id="btn-yes" class="btn yes">Sí</button>
+                        <button id="btn-no" class="btn no">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="respuestaNo" class="hidden">
-      <p>Gracias, que disfrute su día al máximo. ¡Bendiciones! 🙏</p>
+    <!-- Página para respuesta "No" -->
+    <div id="no-page" class="page">
+        <div class="container">
+            <div class="card">
+                <h1>Gracias</h1>
+                <p class="message">Que disfrute su día al máximo. Bendiciones</p>
+                <div class="heart">❤️</div>
+            </div>
+        </div>
     </div>
 
-    <div id="fechas" class="hidden">
-      <p>Seleccione una fecha para celebrar:</p>
-      <button onclick="mostrarDetalles('8 de Junio')">8 de Junio</button>
-      <button onclick="mostrarDetalles('14 de Junio')">14 de Junio</button>
-      <button onclick="elegirOtraFecha()">Otra Fecha</button>
+    <!-- Página para selección de fecha -->
+    <div id="si-page" class="page">
+        <div class="container">
+            <div class="card">
+                <h1>Selecciona una fecha</h1>
+                
+                <form id="dateForm">
+                    <input type="hidden" name="_subject" value="¡Confirmación de fecha de cumpleaños!">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_cc" value="frank.estuard.95@gmail.com">
+                    <input type="hidden" name="_honey" style="display:none">
+                    
+                    <div class="date-options">
+                        <button type="button" class="date-btn" data-date="2024-06-08">8 de Junio</button>
+                        <button type="button" class="date-btn" data-date="2024-06-14">14 de Junio</button>
+                        
+                        <div class="custom-date">
+                            <label for="other-date">Otra fecha:</label>
+                            <input type="date" id="other-date" name="fecha" min="2024-06-06">
+                        </div>
+                    </div>
+                    
+                    <div id="restaurant-details" class="hidden">
+                        <h2>Detalles de la celebración</h2>
+                        <p><strong>Lugar:</strong> Restaurante La Bella Napoli</p>
+                        <p><strong>Dirección:</strong> Calle Principal 123, Ciudad</p>
+                        <p><strong>Hora:</strong> 19:30</p>
+                        <button type="submit" class="btn yes">Confirmar asistencia</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <div id="otraFecha" class="hidden">
-      <p>Elige tu fecha preferida:</p>
-      <input type="date" id="fechaPersonalizada" />
-      <button onclick="mostrarDetalles('personalizada')">Confirmar</button>
+    <!-- Página de confirmación final -->
+    <div id="confirmacion-page" class="page">
+        <div class="container">
+            <div class="card">
+                <h1>¡Confirmado!</h1>
+                <p class="message">Muchas gracias, nos vemos pronto</p>
+                <div class="details">
+                    <p>Fecha: <span id="confirmed-date"></span></p>
+                    <p>Lugar: Restaurante La Bella Napoli</p>
+                    <p>Hora: 19:30</p>
+                </div>
+                <div class="heart">💖</div>
+            </div>
+        </div>
     </div>
 
-    <div id="detalles" class="hidden">
-      <p id="mensajeFinal"></p>
-      <p><strong>Lugar:</strong> Casa Escobar</p>
-      <p><strong>Hora:</strong> 7:00 PM</p>
-      <p><strong>Ubicación:</strong> <a href="https://maps.app.goo.gl/GB5wh1rMKiGV3G8f9" target="_blank">Ver en Google Maps</a></p>
-      <p>¡Muchas gracias, nos vemos pronto 💕!</p>
-    </div>
-  </div>
+    <script>
+        // Manejar navegación entre páginas
+        document.getElementById('btn-yes').addEventListener('click', function() {
+            document.getElementById('main-page').classList.remove('active');
+            document.getElementById('si-page').classList.add('active');
+            createConfetti();
+        });
 
-  <script>
-    function mostrarInvitacion() {
-      document.getElementById('invitacion').classList.remove('hidden');
-    }
+        document.getElementById('btn-no').addEventListener('click', function() {
+            document.getElementById('main-page').classList.remove('active');
+            document.getElementById('no-page').classList.add('active');
+        });
 
-    function respuesta(acepta) {
-      document.getElementById('invitacion').classList.add('hidden');
-      if (!acepta) {
-        document.getElementById('respuestaNo').classList.remove('hidden');
-      } else {
-        document.getElementById('fechas').classList.remove('hidden');
-      }
-    }
+        // Manejar selección de fecha
+        const dateForm = document.getElementById('dateForm');
+        const dateInput = document.getElementById('other-date');
+        const restaurantDetails = document.getElementById('restaurant-details');
+        const dateButtons = document.querySelectorAll('.date-btn');
+        const confirmedDateElement = document.getElementById('confirmed-date');
 
-    function mostrarDetalles(fecha) {
-      document.getElementById('fechas').classList.add('hidden');
-      document.getElementById('otraFecha').classList.add('hidden');
-      document.getElementById('detalles').classList.remove('hidden');
-      const mensaje = document.getElementById('mensajeFinal');
+        // Manejar selección de fecha predefinida
+        dateButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Establecer la fecha en el input
+                const selectedDate = this.getAttribute('data-date');
+                dateInput.value = selectedDate;
+                
+                // Mostrar detalles del restaurante
+                restaurantDetails.classList.remove('hidden');
+                
+                // Resaltar botón seleccionado
+                dateButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
 
-      let seleccion = fecha;
-      if (fecha === 'personalizada') {
-        seleccion = document.getElementById('fechaPersonalizada').value;
-      }
+        // Manejar fecha personalizada
+        dateInput.addEventListener('change', function() {
+            if (this.value) {
+                // Desactivar cualquier botón seleccionado
+                dateButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Mostrar detalles del restaurante
+                restaurantDetails.classList.remove('hidden');
+            }
+        });
 
-      mensaje.textContent = `Celebramos el ${seleccion}`;
+        // Manejar envío del formulario
+        dateForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let selectedDate = dateInput.value;
+            if (!selectedDate) {
+                // Verificar si hay un botón de fecha seleccionado
+                const activeBtn = document.querySelector('.date-btn.active');
+                if (activeBtn) {
+                    selectedDate = activeBtn.getAttribute('data-date');
+                }
+            }
+            
+            if (selectedDate) {
+                // Mostrar la fecha en la página de confirmación
+                const dateObj = new Date(selectedDate);
+                const options = { day: 'numeric', month: 'long' };
+                confirmedDateElement.textContent = dateObj.toLocaleDateString('es-ES', options);
+                
+                // Enviar datos por email usando FormSubmit.co
+                sendEmail(selectedDate);
+                
+                // Navegar a la página de confirmación
+                document.getElementById('si-page').classList.remove('active');
+                document.getElementById('confirmacion-page').classList.add('active');
+                createConfetti();
+            } else {
+                alert('Por favor selecciona una fecha');
+            }
+        });
 
-      // URL base del formulario prellenado de Google Forms
-      // REEMPLAZAR con el URL de su formulario real (con parámetros para prellenar la fecha)
-      const urlBase = "https://docs.google.com/forms/d/e/1FAIpQLSci6NFPejTNgVJPerrDW7qERU3pXZPUJODVrP4qrelUHzqEeQ/viewform?usp=sharing&ouid=108677166335508762282";
-      const urlFinal = urlBase + encodeURIComponent(seleccion);
+        // Función para enviar el email (usando FormSubmit.co)
+        function sendEmail(date) {
+            const formData = new FormData(dateForm);
+            formData.append('fecha_formateada', formatDateForEmail(date));
+            
+            // IMPORTANTE: Reemplaza con tu email real de FormSubmit
+            fetch('frank.estuard.95o@gmail.com', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => console.log('Email enviado:', data))
+            .catch(error => console.error('Error:', error));
+        }
 
-      // Abrir el formulario en nueva pestaña para que su novia envíe la respuesta
-      window.open(urlFinal, "_blank");
-    }
+        // Formatear fecha para el email
+        function formatDateForEmail(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+        }
 
-    function elegirOtraFecha() {
-      document.getElementById('fechas').classList.add('hidden');
-      document.getElementById('otraFecha').classList.remove('hidden');
-    }
-  </script>
+        // Función para crear efecto de confeti
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                confetti.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(confetti);
+                
+                // Eliminar el confeti después de la animación
+                setTimeout(() => {
+                    confetti.remove();
+                }, 7000);
+            }
+        }
+    </script>
 </body>
 </html>
