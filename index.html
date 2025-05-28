@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feliz Cumpleaños</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #f8e1f4, #fff8e1);
+      color: #5c2a5d;
+      text-align: center;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 0.75rem 1.5rem;
+      margin: 1rem;
+      border: none;
+      border-radius: 10px;
+      background-color: #d1a3ff;
+      color: white;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+    .hidden {
+      display: none;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    input[type="date"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Feliz cumpleaños 👸</h1>
+    <p>Que este día sea muy especial y se la pase muy bien</p>
+    <button onclick="mostrarInvitacion()">¿Le gustaría celebrar conmigo?</button>
+
+    <div id="invitacion" class="hidden">
+      <p>¿Desea celebrar conmigo?</p>
+      <button onclick="respuesta(true)">Sí</button>
+      <button onclick="respuesta(false)">No</button>
+    </div>
+
+    <div id="respuestaNo" class="hidden">
+      <p>Gracias, que disfrute su día al máximo. ¡Bendiciones! 🙏</p>
+    </div>
+
+    <div id="fechas" class="hidden">
+      <p>Seleccione una fecha para celebrar:</p>
+      <button onclick="mostrarDetalles('8 de Junio')">8 de Junio</button>
+      <button onclick="mostrarDetalles('14 de Junio')">14 de Junio</button>
+      <button onclick="elegirOtraFecha()">Otra Fecha</button>
+    </div>
+
+    <div id="otraFecha" class="hidden">
+      <p>Elige tu fecha preferida:</p>
+      <input type="date" id="fechaPersonalizada" />
+      <button onclick="mostrarDetalles('personalizada')">Confirmar</button>
+    </div>
+
+    <div id="detalles" class="hidden">
+      <p id="mensajeFinal"></p>
+      <p><strong>Lugar:</strong> Casa Escobar</p>
+      <p><strong>Hora:</strong> 7:00 PM</p>
+      <p><strong>Ubicación:</strong> <a href="https://maps.app.goo.gl/GB5wh1rMKiGV3G8f9" target="_blank">Ver en Google Maps</a></p>
+      <p>¡Muchas gracias, nos vemos pronto 💕!</p>
+    </div>
+  </div>
+
+  <script>
+    function mostrarInvitacion() {
+      document.getElementById('invitacion').classList.remove('hidden');
+    }
+
+    function respuesta(acepta) {
+      document.getElementById('invitacion').classList.add('hidden');
+      if (!acepta) {
+        document.getElementById('respuestaNo').classList.remove('hidden');
+      } else {
+        document.getElementById('fechas').classList.remove('hidden');
+      }
+    }
+
+    function mostrarDetalles(fecha) {
+      document.getElementById('fechas').classList.add('hidden');
+      document.getElementById('otraFecha').classList.add('hidden');
+      document.getElementById('detalles').classList.remove('hidden');
+      const mensaje = document.getElementById('mensajeFinal');
+
+      let seleccion = fecha;
+      if (fecha === 'personalizada') {
+        seleccion = document.getElementById('fechaPersonalizada').value;
+      }
+
+      mensaje.textContent = `Celebramos el ${seleccion}`;
+
+      // URL base del formulario prellenado de Google Forms
+      // REEMPLAZAR con el URL de su formulario real (con parámetros para prellenar la fecha)
+      const urlBase = "https://docs.google.com/forms/d/1ozsBSTCUzgL2uBfaouzNKgInmGWe9KU4m9G4IiMvcCc/prefill";
+      const urlFinal = urlBase + encodeURIComponent(seleccion);
+
+      // Abrir el formulario en nueva pestaña para que su novia envíe la respuesta
+      window.open(urlFinal, "_blank");
+    }
+
+    function elegirOtraFecha() {
+      document.getElementById('fechas').classList.add('hidden');
+      document.getElementById('otraFecha').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
