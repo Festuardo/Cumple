@@ -379,20 +379,23 @@
         });
 
         // Función para enviar el email (usando FormSubmit.co)
-        function sendEmail(date) {
-            const formData = new FormData(dateForm);
-            formData.append('fecha_formateada', formatDateForEmail(date));
+            function sendEmail(date) {
+                const formData = new FormData(dateForm);
+                formData.append('fecha_formateada', formatDateForEmail(date));
             
-            // IMPORTANTE: Reemplaza con tu email real de FormSubmit
-            fetch('frank.estuard.95o@gmail.com', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => console.log('Email enviado:', data))
-            .catch(error => console.error('Error:', error));
-        }
-
+                fetch("https://formsubmit.co/frank.estuard.95@gmail.com", {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Email enviado correctamente');
+                    } else {
+                        console.error('Error al enviar el email');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
         // Formatear fecha para el email
         function formatDateForEmail(dateString) {
             const date = new Date(dateString);
