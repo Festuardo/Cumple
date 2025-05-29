@@ -201,23 +201,6 @@
                 font-size: 1rem;
             }
         }
-
-        /* Animación de confeti */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background-color: #f00;
-            opacity: 0;
-            top: 0;
-            animation: confetti 5s ease-in-out infinite;
-            z-index: 1000;
-        }
-
-        @keyframes confetti {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
     </style>
 </head>
 <body>
@@ -257,11 +240,6 @@
                 <h1>Selecciona una fecha</h1>
                 
                 <form id="dateForm">
-                    <input type="hidden" name="_subject" value="¡Confirmación de fecha de cumpleaños!">
-                    <input type="hidden" name="_template" value="table">
-                    <input type="hidden" name="_cc" value="frank.estuard.95@gmail.com">
-                    <input type="hidden" name="_honey" style="display:none">
-                    
                     <div class="date-options">
                         <button type="button" class="date-btn" data-date="2024-06-08">8 de Junio</button>
                         <button type="button" class="date-btn" data-date="2024-06-14">14 de Junio</button>
@@ -305,7 +283,6 @@
         document.getElementById('btn-yes').addEventListener('click', function() {
             document.getElementById('main-page').classList.remove('active');
             document.getElementById('si-page').classList.add('active');
-            createConfetti();
         });
 
         document.getElementById('btn-no').addEventListener('click', function() {
@@ -361,8 +338,16 @@
             }
             
             if (selectedDate) {
-                // Mostrar la fecha en la página de confirmación
-                const dateObj = new Date(selectedDate);
+                // Parsear la fecha correctamente (solución al problema del día anterior)
+                const dateParts = selectedDate.split('-');
+                const year = parseInt(dateParts[0]);
+                const month = parseInt(dateParts[1]) - 1; // Los meses en JS son 0-11
+                const day = parseInt(dateParts[2]);
+                
+                // Crear fecha LOCAL (ignorando UTC)
+                const dateObj = new Date(year, month, day);
+                
+                // Mostrar la fecha formateada
                 const options = { day: 'numeric', month: 'long' };
                 confirmedDateElement.textContent = dateObj.toLocaleDateString('es-ES', options);
                 
@@ -372,56 +357,43 @@
                 // Navegar a la página de confirmación
                 document.getElementById('si-page').classList.remove('active');
                 document.getElementById('confirmacion-page').classList.add('active');
-                createConfetti();
             } else {
                 alert('Por favor selecciona una fecha');
             }
         });
 
         // Función para enviar el email (usando FormSubmit.co)
-            function sendEmail(date) {
-                const formData = new FormData(dateForm);
-                formData.append('fecha_formateada', formatDateForEmail(date));
+        function sendEmail(date) {
+            const formData = new FormData();
+            formData.append('_subject', '¡Confirmación de fecha de cumpleaños!');
+            formData.append('fecha', formatDateForEmail(date));
+            formData.append('lugar', 'Restaurante La Bella Napoli');
+            formData.append('hora', '19:30');
+            formData.append('_replyto', 'to06fegs@gmail.com'); // Opcional: email de la novia si quieres que pueda responder
             
-                fetch("https://formsubmit.co/frank.estuard.95@gmail.com", {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('Email enviado correctamente');
-                    } else {
-                        console.error('Error al enviar el email');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            }
-        // Formatear fecha para el email
-        function formatDateForEmail(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+            // Reemplaza con tu email real de FormSubmit
+            fetch('https://formsubmit.co/ajax/frank.estuard.95@gmail.com', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => console.log('Email enviado:', data))
+            .catch(error => console.error('Error:', error));
         }
 
-        // Función para crear efecto de confeti
-        function createConfetti() {
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-            
-            for (let i = 0; i < 100; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.width = Math.random() * 10 + 5 + 'px';
-                confetti.style.height = Math.random() * 10 + 5 + 'px';
-                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
-                confetti.style.animationDelay = Math.random() * 5 + 's';
-                document.body.appendChild(confetti);
-                
-                // Eliminar el confeti después de la animación
-                setTimeout(() => {
-                    confetti.remove();
-                }, 7000);
-            }
+        // Formatear fecha para el email (corregido)
+        function formatDateForEmail(dateString) {
+            const dateParts = dateString.split('-');
+            const dateObj = new Date(
+                parseInt(dateParts[0]),
+                parseInt(dateParts[1]) - 1,
+                parseInt(dateParts[2])
+            );
+            return dateObj.toLocaleDateString('es-ES', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long' 
+            });
         }
     </script>
 </body>
