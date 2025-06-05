@@ -288,7 +288,26 @@
         document.getElementById('btn-no').addEventListener('click', function() {
             document.getElementById('main-page').classList.remove('active');
             document.getElementById('no-page').classList.add('active');
+            
+            // Enviar email de rechazo
+            sendRejectionEmail();
         });
+
+        // Función para enviar email de rechazo
+        function sendRejectionEmail() {
+            const formData = new FormData();
+            formData.append('_subject', 'El invitado no asistirá al cumpleaños');
+            formData.append('mensaje', 'El invitado ha indicado que no asistirá a la celebración.');
+            formData.append('_replyto', 'to06fegs@gmail.com'); // Opcional
+            
+            fetch('https://formsubmit.co/ajax/frank.estuard.95@gmail.com', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => console.log('Email de rechazo enviado:', data))
+            .catch(error => console.error('Error:', error));
+        }
 
         // Manejar selección de fecha
         const dateForm = document.getElementById('dateForm');
